@@ -192,7 +192,7 @@ int send_udp(int argc, char *argv[]) {
     printf("Sending to '%s:%d' '%d'\n"
            "Packet size: '%d'\n"
            "Packets amount: '%d'\n"
-           "Sending delay: '%d'\n",
+           "Sending delay: '%fs'\n",
            ip, port, data_size, count, delay);
     // now just sendto() our destination!
     int sent = 0;
