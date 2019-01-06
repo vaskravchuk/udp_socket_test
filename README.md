@@ -5,7 +5,7 @@
 In CMD:\
 git clone https://github.com/vaskravchuk/udp_socket_test.git\
 cd udp_socket_test\
-gcc main.c -o build/udp_socket_test
+gcc main.c -o udp_socket_test
 ### Windows
 Download repository from github\
 Run Visual Studio Developex CMD line\

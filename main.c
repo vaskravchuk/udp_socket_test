@@ -189,7 +189,7 @@ int send_udp(int argc, char *argv[]) {
     addr.sin_addr.s_addr = inet_addr(ip);
     addr.sin_port = htons(port);
 
-    printf("Sending to '%s:%d' '%d'\n"
+    printf("Sending to '%s:%d'\n"
            "Packet size: '%d'\n"
            "Packets amount: '%d'\n"
            "Sending delay: '%fs'\n",
