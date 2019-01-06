@@ -8,8 +8,8 @@ cd udp_socket_test\
 gcc main.c -o udp_socket_test
 ### Windows
 Download repository from github\
-Run Visual Studio Developex CMD line\
-Go to directory with sources\
+Run 'Developer Command Prompt for VS'\
+Go to directory with sources: 'cd path_to_sources'\
 In CMD:\
 cl main.c /link /out:udp_socket_test.exe
 
