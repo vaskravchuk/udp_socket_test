@@ -215,6 +215,7 @@ int send_udp(int argc, char *argv[]) {
         usleep(delay * 1000000); // Unix sleep is seconds
 #endif
     }
+    printf("\n");
 
 #ifdef _WIN32
     WSACleanup();
