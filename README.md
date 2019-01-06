@@ -3,7 +3,7 @@
 ## Install
 ### Linux
 In CMD:\
-git clone https://github.com/vaskravchuk/udp_socket_test.git\
+git clone https://github.com/vaskravchuk/udp_socket_test.git \
 cd udp_socket_test\
 gcc main.c -o udp_socket_test
 ### Windows
