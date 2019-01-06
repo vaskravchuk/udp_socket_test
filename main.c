@@ -1,16 +1,17 @@
 #include <stdio.h>
 
 #ifdef _WIN32
-    #include <Winsock2.h> // before Windows.h, else Winsock 1 conflict
-    #include <Ws2tcpip.h> // needed for ip_mreq definition for multicast
-    #include <Windows.h>
+    #include <winsock2.h> // before Windows.h, else Winsock 1 conflict
+    #include <ws2tcpip.h> // needed for ip_mreq definition for multicast
+    #include <windows.h>
+    #pragma comment(lib, "Ws2_32.lib") // need for linking
 #else
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <time.h>
-#include <unistd.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <time.h>
+    #include <unistd.h>
 #endif
 
 #include <string.h>
@@ -31,7 +32,7 @@
 
 int listen_udp(int argc, char *argv[]);
 int send_udp(int argc, char *argv[]);
-int show_help(char *name);
+void show_help(char *name);
 char* generate_random_string(int size);
 
 int main(int argc, char *argv[]) {
@@ -51,7 +52,7 @@ int main(int argc, char *argv[]) {
     return result;
 }
 
-int show_help(char *name) {
+void show_help(char *name) {
     printf("Examples:\n"
            "%s listen -p port\n"
            "%s send -ip ip -p port -s data_size -c data_count -d delay_sec", name, name);
@@ -73,7 +74,7 @@ int listen_udp(int argc, char *argv[]) {
         return 1;
     }
 
-    printf("\rListening: %d", port);
+    printf("Listening: '%d'\n", port);
 
 #ifdef _WIN32
     // Initialize Windows Socket API with given VERSION.
@@ -112,6 +113,7 @@ int listen_udp(int argc, char *argv[]) {
     }
 
     int recieved = 0;
+    printf("Recieved: %d", recieved);
     // now just enter a read-print loop
     while (1) {
         char msgbuf[MSGBUFSIZE];
@@ -123,15 +125,11 @@ int listen_udp(int argc, char *argv[]) {
         }
         msgbuf[nbytes] = '\0';
         recieved++;
-        printf("\rRecieved: %d", recieved);
+        printf("\33[2K\r" "Recieved: %d", recieved);
         fflush(stdout);
     }
 
 #ifdef _WIN32
-    // Program never actually gets here due to infinite loop that has to be
-    // canceled, but since people on the internet wind up using examples
-    // they find at random in their own code it's good to show what shutting
-    // down cleanly would look like.
     WSACleanup();
 #endif
 
@@ -147,15 +145,15 @@ int send_udp(int argc, char *argv[]) {
 
     for (int i = 0; i < argc - 1; ++i) {
         char *cmd = argv[i];
-        if (!strcmp(cmd, PORT) == 0) {
+        if (strcmp(cmd, PORT) == 0) {
             port = atoi(argv[++i]); // 0 if error, which is an invalid port
-        } else if (!strcmp(cmd, IP) == 0) {
+        } else if (strcmp(cmd, IP) == 0) {
             ip = argv[++i]; // 0 if error, which is an invalid port
-        } else if (!strcmp(cmd, SIZE) == 0) {
+        } else if (strcmp(cmd, SIZE) == 0) {
             data_size = atoi(argv[++i]); // 0 if error, which is an invalid port
-        } else if (!strcmp(cmd, COUNT) == 0) {
+        } else if (strcmp(cmd, COUNT) == 0) {
             count = atoi(argv[++i]); // 0 if error, which is an invalid port
-        } else if (!strcmp(cmd, DELAY) == 0) {
+        } else if (strcmp(cmd, DELAY) == 0) {
             delay = atof(argv[++i]); // 0 if error, which is an invalid port
         } else {
             return 1;
@@ -178,7 +176,6 @@ int send_udp(int argc, char *argv[]) {
 #endif
 
     // create what looks like an ordinary UDP socket
-    //
     int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0) {
         perror("socket");
@@ -186,18 +183,21 @@ int send_udp(int argc, char *argv[]) {
     }
 
     // set up destination address
-    //
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = inet_addr(ip);
     addr.sin_port = htons(port);
 
+    printf("Sending to '%s:%d' '%d'\n"
+           "Packet size: '%d'\n"
+           "Packets amount: '%d'\n"
+           "Sending delay: '%d'\n",
+           ip, port, data_size, count, delay);
     // now just sendto() our destination!
-    //
     int sent = 0;
     for (int i = 0; i < count; ++i) {
-        const char *message = generate_random_string(data_size);
+        char *message = generate_random_string(data_size);
         int nbytes = sendto(fd, message, data_size, 0, (struct sockaddr*) &addr, sizeof(addr));
         free(message);
         if (nbytes < 0) {
@@ -206,7 +206,7 @@ int send_udp(int argc, char *argv[]) {
         }
 
         sent++;
-        printf("\rSend: %d", sent);
+        printf("\33[2K\r" "Sent: %d", sent);
         fflush(stdout);
 
 #ifdef _WIN32
@@ -217,12 +217,6 @@ int send_udp(int argc, char *argv[]) {
     }
 
 #ifdef _WIN32
-    //
-    // Program never actually gets here due to infinite loop that has to be
-    // canceled, but since people on the internet wind up using examples
-    // they find at random in their own code it's good to show what shutting
-    // down cleanly would look like.
-    //
     WSACleanup();
 #endif
 
