@@ -19,11 +19,12 @@
 #include <stdlib.h>
 
 #define MSGBUFSIZE 256
+
 #define ASCII_START 32
 #define ASCII_END 126
+
 #define LISTEN_CMD "listen"
 #define SEND_CMD "send"
-
 #define PORT "-p"
 #define IP "-ip"
 #define DELAY "-d"
