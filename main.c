@@ -148,13 +148,13 @@ int send_udp(int argc, char *argv[]) {
         if (strcmp(cmd, PORT) == 0) {
             port = atoi(argv[++i]); // 0 if error, which is an invalid port
         } else if (strcmp(cmd, IP) == 0) {
-            ip = argv[++i]; // 0 if error, which is an invalid port
+            ip = argv[++i];
         } else if (strcmp(cmd, SIZE) == 0) {
-            data_size = atoi(argv[++i]); // 0 if error, which is an invalid port
+            data_size = atoi(argv[++i]); // 0 if error, which is an invalid size
         } else if (strcmp(cmd, COUNT) == 0) {
-            count = atoi(argv[++i]); // 0 if error, which is an invalid port
+            count = atoi(argv[++i]); // 0 if error, which is an invalid count
         } else if (strcmp(cmd, DELAY) == 0) {
-            delay = atof(argv[++i]); // 0 if error, which is an invalid port
+            delay = atof(argv[++i]); // 0 if error, which is an invalid delay
         } else {
             return 1;
         }
@@ -210,7 +210,7 @@ int send_udp(int argc, char *argv[]) {
 #ifdef _WIN32
         Sleep(delay * 1000); // Windows Sleep is milliseconds
 #else
-        usleep(delay * 1000000); // Unix sleep is seconds
+        usleep(delay * 1000000); // Unix sleep is microseconds
 #endif
     }
     printf("\n");
