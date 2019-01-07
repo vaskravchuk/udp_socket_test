@@ -4,7 +4,7 @@
     #include <winsock2.h> // before Windows.h, else Winsock 1 conflict
     #include <ws2tcpip.h> // needed for ip_mreq definition for multicast
     #include <windows.h>
-    #pragma comment(lib, "Ws2_32.lib") // need for linking
+    #pragma comment(lib, "Ws2_32.lib") // needed for linking socket lib
 #else
     #include <sys/types.h>
     #include <sys/socket.h>
@@ -165,9 +165,7 @@ int send_udp(int argc, char *argv[]) {
     }
 
 #ifdef _WIN32
-    //
     // Initialize Windows Socket API with given VERSION.
-    //
     WSADATA wsaData;
     if (WSAStartup(0x0101, &wsaData)) {
         perror("WSAStartup");
