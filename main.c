@@ -4,7 +4,7 @@
     #include <winsock2.h> // before Windows.h, else Winsock 1 conflict
     #include <ws2tcpip.h> // needed for ip_mreq definition for multicast
     #include <windows.h>
-    #pragma comment(lib, "Ws2_32.lib") // need for linking
+    #pragma comment(lib, "Ws2_32.lib") // needed for linking socket lib
 #else
     #include <sys/types.h>
     #include <sys/socket.h>
@@ -19,11 +19,12 @@
 #include <stdlib.h>
 
 #define MSGBUFSIZE 256
+
 #define ASCII_START 32
 #define ASCII_END 126
+
 #define LISTEN_CMD "listen"
 #define SEND_CMD "send"
-
 #define PORT "-p"
 #define IP "-ip"
 #define DELAY "-d"
@@ -148,13 +149,13 @@ int send_udp(int argc, char *argv[]) {
         if (strcmp(cmd, PORT) == 0) {
             port = atoi(argv[++i]); // 0 if error, which is an invalid port
         } else if (strcmp(cmd, IP) == 0) {
-            ip = argv[++i]; // 0 if error, which is an invalid port
+            ip = argv[++i];
         } else if (strcmp(cmd, SIZE) == 0) {
-            data_size = atoi(argv[++i]); // 0 if error, which is an invalid port
+            data_size = atoi(argv[++i]); // 0 if error, which is an invalid size
         } else if (strcmp(cmd, COUNT) == 0) {
-            count = atoi(argv[++i]); // 0 if error, which is an invalid port
+            count = atoi(argv[++i]); // 0 if error, which is an invalid count
         } else if (strcmp(cmd, DELAY) == 0) {
-            delay = atof(argv[++i]); // 0 if error, which is an invalid port
+            delay = atof(argv[++i]); // 0 if error, which is an invalid delay
         } else {
             return 1;
         }
