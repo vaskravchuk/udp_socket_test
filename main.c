@@ -165,9 +165,7 @@ int send_udp(int argc, char *argv[]) {
     }
 
 #ifdef _WIN32
-    //
     // Initialize Windows Socket API with given VERSION.
-    //
     WSADATA wsaData;
     if (WSAStartup(0x0101, &wsaData)) {
         perror("WSAStartup");
@@ -194,7 +192,7 @@ int send_udp(int argc, char *argv[]) {
            "Packets amount: '%d'\n"
            "Sending delay: '%fs'\n",
            ip, port, data_size, count, delay);
-    // now just sendto() our destination!
+    // now just sendto() our destination
     int sent = 0;
     for (int i = 0; i < count; ++i) {
         char *message = generate_random_string(data_size);
@@ -212,7 +210,7 @@ int send_udp(int argc, char *argv[]) {
 #ifdef _WIN32
         Sleep(delay * 1000); // Windows Sleep is milliseconds
 #else
-        usleep(delay * 1000000); // Unix sleep is seconds
+        usleep(delay * 1000000); // Unix sleep is microseconds
 #endif
     }
     printf("\n");
